@@ -1,0 +1,174 @@
+{
+	"inputs" : 
+	[
+		{
+			"path" : "CMakeLists.txt"
+		},
+		{
+			"isGenerated" : true,
+			"path" : "build/CMakeFiles/3.30.4/CMakeSystem.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/Users/Anti_Matrix/Anaconda3/Lib/site-packages/cmake/data/share/cmake-3.30/Modules/CMakeSystemSpecificInitialize.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/Users/Anti_Matrix/Anaconda3/Lib/site-packages/cmake/data/share/cmake-3.30/Modules/Platform/Windows-Initialize.cmake"
+		},
+		{
+			"isGenerated" : true,
+			"path" : "build/CMakeFiles/3.30.4/CMakeCXXCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/Users/Anti_Matrix/Anaconda3/Lib/site-packages/cmake/data/share/cmake-3.30/Modules/CMakeSystemSpecificInformation.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/Users/Anti_Matrix/Anaconda3/Lib/site-packages/cmake/data/share/cmake-3.30/Modules/CMakeGenericSystem.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/Users/Anti_Matrix/Anaconda3/Lib/site-packages/cmake/data/share/cmake-3.30/Modules/CMakeInitializeConfigs.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/Users/Anti_Matrix/Anaconda3/Lib/site-packages/cmake/data/share/cmake-3.30/Modules/Platform/Windows.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/Users/Anti_Matrix/Anaconda3/Lib/site-packages/cmake/data/share/cmake-3.30/Modules/Platform/WindowsPaths.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/Users/Anti_Matrix/Anaconda3/Lib/site-packages/cmake/data/share/cmake-3.30/Modules/CMakeCXXInformation.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/Users/Anti_Matrix/Anaconda3/Lib/site-packages/cmake/data/share/cmake-3.30/Modules/CMakeLanguageInformation.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/Users/Anti_Matrix/Anaconda3/Lib/site-packages/cmake/data/share/cmake-3.30/Modules/Compiler/MSVC-CXX.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/Users/Anti_Matrix/Anaconda3/Lib/site-packages/cmake/data/share/cmake-3.30/Modules/Compiler/MSVC.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/Users/Anti_Matrix/Anaconda3/Lib/site-packages/cmake/data/share/cmake-3.30/Modules/Compiler/CMakeCommonCompilerMacros.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/Users/Anti_Matrix/Anaconda3/Lib/site-packages/cmake/data/share/cmake-3.30/Modules/Platform/Windows-MSVC-CXX.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/Users/Anti_Matrix/Anaconda3/Lib/site-packages/cmake/data/share/cmake-3.30/Modules/Platform/Windows-MSVC.cmake"
+		},
+		{
+			"isGenerated" : true,
+			"path" : "build/CMakeFiles/3.30.4/CMakeRCCompiler.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/Users/Anti_Matrix/Anaconda3/Lib/site-packages/cmake/data/share/cmake-3.30/Modules/CMakeRCInformation.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/Users/Anti_Matrix/Anaconda3/Lib/site-packages/cmake/data/share/cmake-3.30/Modules/CMakeCommonLanguageInclude.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "T:/DevloperEnvs/opencv/build/x64/vc16/lib/OpenCVConfig-version.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "T:/DevloperEnvs/opencv/build/x64/vc16/lib/OpenCVConfig.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/Users/Anti_Matrix/Anaconda3/Lib/site-packages/cmake/data/share/cmake-3.30/Modules/FindPackageHandleStandardArgs.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/Users/Anti_Matrix/Anaconda3/Lib/site-packages/cmake/data/share/cmake-3.30/Modules/FindPackageMessage.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "T:/DevloperEnvs/opencv/build/x64/vc16/lib/OpenCVModules.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "T:/DevloperEnvs/opencv/build/x64/vc16/lib/OpenCVModules-debug.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "T:/DevloperEnvs/opencv/build/x64/vc16/lib/OpenCVModules-release.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/Users/Anti_Matrix/Anaconda3/Lib/site-packages/cmake/data/share/cmake-3.30/Modules/FindCUDA.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/Users/Anti_Matrix/Anaconda3/Lib/site-packages/cmake/data/share/cmake-3.30/Modules/FindPackageHandleStandardArgs.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/Users/Anti_Matrix/Anaconda3/Lib/site-packages/cmake/data/share/cmake-3.30/Modules/FindPackageMessage.cmake"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/Users/Anti_Matrix/Anaconda3/Lib/site-packages/cmake/data/share/cmake-3.30/Modules/FindCUDA/select_compute_arch.cmake"
+		},
+		{
+			"isGenerated" : true,
+			"path" : "build/CMakeFiles/App4.dir/src/App4_generated_NativeGpuProcessor.cu.obj.depend"
+		},
+		{
+			"isCMake" : true,
+			"isExternal" : true,
+			"path" : "C:/Users/Anti_Matrix/Anaconda3/Lib/site-packages/cmake/data/share/cmake-3.30/Modules/FindCUDA/run_nvcc.cmake"
+		},
+		{
+			"isGenerated" : true,
+			"path" : "build/CMakeFiles/App4.dir/src/App4_generated_NativeGpuProcessor.cu.obj.cmake.pre-gen"
+		}
+	],
+	"kind" : "cmakeFiles",
+	"paths" : 
+	{
+		"build" : "T:/works/App4/build",
+		"source" : "T:/works/App4"
+	},
+	"version" : 
+	{
+		"major" : 1,
+		"minor" : 1
+	}
+}

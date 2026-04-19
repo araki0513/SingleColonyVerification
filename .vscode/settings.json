@@ -1,0 +1,13 @@
+{
+    "C_Cpp.default.browse.path": [
+        "${workspaceFolder}/**",
+        "D:\\env\\openCV-Built-by-minGW-x64-4.9.0\\include"
+    ],
+    "C_Cpp.default.includePath": [
+        "${workspaceFolder}/include",
+        "D:\\env\\openCV-Built-by-minGW-x64-4.9.0\\include"
+    ],
+    "C_Cpp.errorSquiggles": "enabled",
+    "python-envs.defaultEnvManager": "ms-python.python:conda",
+    "python-envs.defaultPackageManager": "ms-python.python:conda"
+}
