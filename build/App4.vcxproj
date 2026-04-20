@@ -94,17 +94,23 @@
       <AdditionalOptions>%(AdditionalOptions) /external:I "T:/DevloperEnvs/opencv/build/include"</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <BufferSecurityCheck></BufferSecurityCheck>
+      <CallingConvention></CallingConvention>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>Sync</ExceptionHandling>
       <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <FloatingPointModel></FloatingPointModel>
+      <ForceConformanceInForLoopScope></ForceConformanceInForLoopScope>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MinimalRebuild></MinimalRebuild>
       <Optimization>Disabled</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RemoveUnreferencedCodeData></RemoveUnreferencedCodeData>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <SupportJustMyCode></SupportJustMyCode>
+      <TreatWChar_tAsBuiltInType></TreatWChar_tAsBuiltInType>
       <UseFullPaths>false</UseFullPaths>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;_USE_MATH_DEFINES;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
@@ -126,10 +132,14 @@
       <AdditionalDependencies>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.1\lib\x64\cudart_static.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100d.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100d.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100d.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100d.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100d.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100d.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100d.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100d.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100d.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100d.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100d.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100d.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100d.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100d.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100d.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100d.lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.1\lib\x64\cudart_static.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <DataExecutionPrevention></DataExecutionPrevention>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImageHasSafeExceptionHandlers></ImageHasSafeExceptionHandlers>
       <ImportLibrary>T:/works/App4/build/Debug/App4.lib</ImportLibrary>
+      <LinkErrorReporting></LinkErrorReporting>
       <ProgramDataBaseFile>T:/works/App4/build/Debug/App4.pdb</ProgramDataBaseFile>
+      <RandomizedBaseAddress></RandomizedBaseAddress>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -142,16 +152,22 @@
       <AdditionalOptions>%(AdditionalOptions) /external:I "T:/DevloperEnvs/opencv/build/include"</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <BufferSecurityCheck></BufferSecurityCheck>
+      <CallingConvention></CallingConvention>
       <ExceptionHandling>Sync</ExceptionHandling>
       <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <FloatingPointModel></FloatingPointModel>
+      <ForceConformanceInForLoopScope></ForceConformanceInForLoopScope>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MinimalRebuild></MinimalRebuild>
       <Optimization>MaxSpeed</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RemoveUnreferencedCodeData></RemoveUnreferencedCodeData>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <SupportJustMyCode></SupportJustMyCode>
+      <TreatWChar_tAsBuiltInType></TreatWChar_tAsBuiltInType>
       <UseFullPaths>false</UseFullPaths>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_USE_MATH_DEFINES;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
@@ -175,10 +191,14 @@
       <AdditionalDependencies>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.1\lib\x64\cudart_static.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.1\lib\x64\cudart_static.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <DataExecutionPrevention></DataExecutionPrevention>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImageHasSafeExceptionHandlers></ImageHasSafeExceptionHandlers>
       <ImportLibrary>T:/works/App4/build/Release/App4.lib</ImportLibrary>
+      <LinkErrorReporting></LinkErrorReporting>
       <ProgramDataBaseFile>T:/works/App4/build/Release/App4.pdb</ProgramDataBaseFile>
+      <RandomizedBaseAddress></RandomizedBaseAddress>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -191,16 +211,22 @@
       <AdditionalOptions>%(AdditionalOptions) /external:I "T:/DevloperEnvs/opencv/build/include"</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <BufferSecurityCheck></BufferSecurityCheck>
+      <CallingConvention></CallingConvention>
       <ExceptionHandling>Sync</ExceptionHandling>
       <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <FloatingPointModel></FloatingPointModel>
+      <ForceConformanceInForLoopScope></ForceConformanceInForLoopScope>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MinimalRebuild></MinimalRebuild>
       <Optimization>MinSpace</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RemoveUnreferencedCodeData></RemoveUnreferencedCodeData>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <SupportJustMyCode></SupportJustMyCode>
+      <TreatWChar_tAsBuiltInType></TreatWChar_tAsBuiltInType>
       <UseFullPaths>false</UseFullPaths>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_USE_MATH_DEFINES;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
@@ -224,10 +250,14 @@
       <AdditionalDependencies>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.1\lib\x64\cudart_static.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.1\lib\x64\cudart_static.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <DataExecutionPrevention></DataExecutionPrevention>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImageHasSafeExceptionHandlers></ImageHasSafeExceptionHandlers>
       <ImportLibrary>T:/works/App4/build/MinSizeRel/App4.lib</ImportLibrary>
+      <LinkErrorReporting></LinkErrorReporting>
       <ProgramDataBaseFile>T:/works/App4/build/MinSizeRel/App4.pdb</ProgramDataBaseFile>
+      <RandomizedBaseAddress></RandomizedBaseAddress>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -240,17 +270,23 @@
       <AdditionalOptions>%(AdditionalOptions) /external:I "T:/DevloperEnvs/opencv/build/include"</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <BufferSecurityCheck></BufferSecurityCheck>
+      <CallingConvention></CallingConvention>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>Sync</ExceptionHandling>
       <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <FloatingPointModel></FloatingPointModel>
+      <ForceConformanceInForLoopScope></ForceConformanceInForLoopScope>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MinimalRebuild></MinimalRebuild>
       <Optimization>MaxSpeed</Optimization>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RemoveUnreferencedCodeData></RemoveUnreferencedCodeData>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <SupportJustMyCode></SupportJustMyCode>
+      <TreatWChar_tAsBuiltInType></TreatWChar_tAsBuiltInType>
       <UseFullPaths>false</UseFullPaths>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_USE_MATH_DEFINES;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
@@ -272,10 +308,14 @@
       <AdditionalDependencies>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.1\lib\x64\cudart_static.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;T:\DevloperEnvs\opencv\build\x64\vc16\lib\opencv_world4100.lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.1\lib\x64\cudart_static.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <DataExecutionPrevention></DataExecutionPrevention>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImageHasSafeExceptionHandlers></ImageHasSafeExceptionHandlers>
       <ImportLibrary>T:/works/App4/build/RelWithDebInfo/App4.lib</ImportLibrary>
+      <LinkErrorReporting></LinkErrorReporting>
       <ProgramDataBaseFile>T:/works/App4/build/RelWithDebInfo/App4.pdb</ProgramDataBaseFile>
+      <RandomizedBaseAddress></RandomizedBaseAddress>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -290,9 +330,9 @@ cd T:\works\App4\build\CMakeFiles\App4.dir\src
 if %errorlevel% neq 0 goto :cmEnd
 T:
 if %errorlevel% neq 0 goto :cmEnd
-C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\bin\cmake.exe -E make_directory T:/works/App4/build/CMakeFiles/App4.dir/src/$(Configuration)
+"C:\Program Files\CMake\bin\cmake.exe" -E make_directory T:/works/App4/build/CMakeFiles/App4.dir/src/$(Configuration)
 if %errorlevel% neq 0 goto :cmEnd
-C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\bin\cmake.exe -D verbose:BOOL=OFF -D "CCBIN:PATH=$(VCInstallDir)Tools/MSVC/$(VCToolsVersion)/bin/Host$(Platform)/$(PlatformTarget)" -D build_configuration:STRING=$(ConfigurationName) -D generated_file:STRING=T:/works/App4/build/CMakeFiles/App4.dir/src/$(Configuration)/App4_generated_NativeGpuProcessor.cu.obj -D generated_cubin_file:STRING=T:/works/App4/build/CMakeFiles/App4.dir/src/$(Configuration)/App4_generated_NativeGpuProcessor.cu.obj.cubin.txt -P T:/works/App4/build/CMakeFiles/App4.dir/src/App4_generated_NativeGpuProcessor.cu.obj.Debug.cmake
+"C:\Program Files\CMake\bin\cmake.exe" -D verbose:BOOL=OFF -D "CCBIN:PATH=$(VCInstallDir)Tools/MSVC/$(VCToolsVersion)/bin/Host$(Platform)/$(PlatformTarget)" -D build_configuration:STRING=$(ConfigurationName) -D generated_file:STRING=T:/works/App4/build/CMakeFiles/App4.dir/src/$(Configuration)/App4_generated_NativeGpuProcessor.cu.obj -D generated_cubin_file:STRING=T:/works/App4/build/CMakeFiles/App4.dir/src/$(Configuration)/App4_generated_NativeGpuProcessor.cu.obj.cubin.txt -P T:/works/App4/build/CMakeFiles/App4.dir/src/App4_generated_NativeGpuProcessor.cu.obj.Debug.cmake
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -309,9 +349,9 @@ cd T:\works\App4\build\CMakeFiles\App4.dir\src
 if %errorlevel% neq 0 goto :cmEnd
 T:
 if %errorlevel% neq 0 goto :cmEnd
-C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\bin\cmake.exe -E make_directory T:/works/App4/build/CMakeFiles/App4.dir/src/$(Configuration)
+"C:\Program Files\CMake\bin\cmake.exe" -E make_directory T:/works/App4/build/CMakeFiles/App4.dir/src/$(Configuration)
 if %errorlevel% neq 0 goto :cmEnd
-C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\bin\cmake.exe -D verbose:BOOL=OFF -D "CCBIN:PATH=$(VCInstallDir)Tools/MSVC/$(VCToolsVersion)/bin/Host$(Platform)/$(PlatformTarget)" -D build_configuration:STRING=$(ConfigurationName) -D generated_file:STRING=T:/works/App4/build/CMakeFiles/App4.dir/src/$(Configuration)/App4_generated_NativeGpuProcessor.cu.obj -D generated_cubin_file:STRING=T:/works/App4/build/CMakeFiles/App4.dir/src/$(Configuration)/App4_generated_NativeGpuProcessor.cu.obj.cubin.txt -P T:/works/App4/build/CMakeFiles/App4.dir/src/App4_generated_NativeGpuProcessor.cu.obj.Release.cmake
+"C:\Program Files\CMake\bin\cmake.exe" -D verbose:BOOL=OFF -D "CCBIN:PATH=$(VCInstallDir)Tools/MSVC/$(VCToolsVersion)/bin/Host$(Platform)/$(PlatformTarget)" -D build_configuration:STRING=$(ConfigurationName) -D generated_file:STRING=T:/works/App4/build/CMakeFiles/App4.dir/src/$(Configuration)/App4_generated_NativeGpuProcessor.cu.obj -D generated_cubin_file:STRING=T:/works/App4/build/CMakeFiles/App4.dir/src/$(Configuration)/App4_generated_NativeGpuProcessor.cu.obj.cubin.txt -P T:/works/App4/build/CMakeFiles/App4.dir/src/App4_generated_NativeGpuProcessor.cu.obj.Release.cmake
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -328,9 +368,9 @@ cd T:\works\App4\build\CMakeFiles\App4.dir\src
 if %errorlevel% neq 0 goto :cmEnd
 T:
 if %errorlevel% neq 0 goto :cmEnd
-C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\bin\cmake.exe -E make_directory T:/works/App4/build/CMakeFiles/App4.dir/src/$(Configuration)
+"C:\Program Files\CMake\bin\cmake.exe" -E make_directory T:/works/App4/build/CMakeFiles/App4.dir/src/$(Configuration)
 if %errorlevel% neq 0 goto :cmEnd
-C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\bin\cmake.exe -D verbose:BOOL=OFF -D "CCBIN:PATH=$(VCInstallDir)Tools/MSVC/$(VCToolsVersion)/bin/Host$(Platform)/$(PlatformTarget)" -D build_configuration:STRING=$(ConfigurationName) -D generated_file:STRING=T:/works/App4/build/CMakeFiles/App4.dir/src/$(Configuration)/App4_generated_NativeGpuProcessor.cu.obj -D generated_cubin_file:STRING=T:/works/App4/build/CMakeFiles/App4.dir/src/$(Configuration)/App4_generated_NativeGpuProcessor.cu.obj.cubin.txt -P T:/works/App4/build/CMakeFiles/App4.dir/src/App4_generated_NativeGpuProcessor.cu.obj.MinSizeRel.cmake
+"C:\Program Files\CMake\bin\cmake.exe" -D verbose:BOOL=OFF -D "CCBIN:PATH=$(VCInstallDir)Tools/MSVC/$(VCToolsVersion)/bin/Host$(Platform)/$(PlatformTarget)" -D build_configuration:STRING=$(ConfigurationName) -D generated_file:STRING=T:/works/App4/build/CMakeFiles/App4.dir/src/$(Configuration)/App4_generated_NativeGpuProcessor.cu.obj -D generated_cubin_file:STRING=T:/works/App4/build/CMakeFiles/App4.dir/src/$(Configuration)/App4_generated_NativeGpuProcessor.cu.obj.cubin.txt -P T:/works/App4/build/CMakeFiles/App4.dir/src/App4_generated_NativeGpuProcessor.cu.obj.MinSizeRel.cmake
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -347,9 +387,9 @@ cd T:\works\App4\build\CMakeFiles\App4.dir\src
 if %errorlevel% neq 0 goto :cmEnd
 T:
 if %errorlevel% neq 0 goto :cmEnd
-C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\bin\cmake.exe -E make_directory T:/works/App4/build/CMakeFiles/App4.dir/src/$(Configuration)
+"C:\Program Files\CMake\bin\cmake.exe" -E make_directory T:/works/App4/build/CMakeFiles/App4.dir/src/$(Configuration)
 if %errorlevel% neq 0 goto :cmEnd
-C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\bin\cmake.exe -D verbose:BOOL=OFF -D "CCBIN:PATH=$(VCInstallDir)Tools/MSVC/$(VCToolsVersion)/bin/Host$(Platform)/$(PlatformTarget)" -D build_configuration:STRING=$(ConfigurationName) -D generated_file:STRING=T:/works/App4/build/CMakeFiles/App4.dir/src/$(Configuration)/App4_generated_NativeGpuProcessor.cu.obj -D generated_cubin_file:STRING=T:/works/App4/build/CMakeFiles/App4.dir/src/$(Configuration)/App4_generated_NativeGpuProcessor.cu.obj.cubin.txt -P T:/works/App4/build/CMakeFiles/App4.dir/src/App4_generated_NativeGpuProcessor.cu.obj.RelWithDebInfo.cmake
+"C:\Program Files\CMake\bin\cmake.exe" -D verbose:BOOL=OFF -D "CCBIN:PATH=$(VCInstallDir)Tools/MSVC/$(VCToolsVersion)/bin/Host$(Platform)/$(PlatformTarget)" -D build_configuration:STRING=$(ConfigurationName) -D generated_file:STRING=T:/works/App4/build/CMakeFiles/App4.dir/src/$(Configuration)/App4_generated_NativeGpuProcessor.cu.obj -D generated_cubin_file:STRING=T:/works/App4/build/CMakeFiles/App4.dir/src/$(Configuration)/App4_generated_NativeGpuProcessor.cu.obj.cubin.txt -P T:/works/App4/build/CMakeFiles/App4.dir/src/App4_generated_NativeGpuProcessor.cu.obj.RelWithDebInfo.cmake
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -367,7 +407,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <UseUtf8Encoding>Always</UseUtf8Encoding>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule T:/works/App4/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\bin\cmake.exe -ST:/works/App4 -BT:/works/App4/build --check-stamp-file T:/works/App4/build/CMakeFiles/generate.stamp
+"C:\Program Files\CMake\bin\cmake.exe" -ST:/works/App4 -BT:/works/App4/build --check-stamp-file T:/works/App4/build/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -375,12 +415,12 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\CMakeCXXInformation.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\CMakeCommonLanguageInclude.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\CMakeGenericSystem.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\CMakeInitializeConfigs.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\CMakeLanguageInformation.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\CMakeRCInformation.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\CMakeSystemSpecificInformation.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\CMakeSystemSpecificInitialize.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\Compiler\MSVC-CXX.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\Compiler\MSVC.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\FindCUDA.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\FindCUDA\run_nvcc.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\FindCUDA\select_compute_arch.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\FindPackageHandleStandardArgs.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\FindPackageMessage.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\Platform\Windows-Initialize.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\Platform\Windows-MSVC.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\Platform\Windows.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\Platform\WindowsPaths.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVConfig-version.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVConfig.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVModules-debug.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVModules-release.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVModules.cmake;T:\works\App4\build\CMakeFiles\3.30.4\CMakeCXXCompiler.cmake;T:\works\App4\build\CMakeFiles\3.30.4\CMakeRCCompiler.cmake;T:\works\App4\build\CMakeFiles\3.30.4\CMakeSystem.cmake;T:\works\App4\build\CMakeFiles\App4.dir\src\App4_generated_NativeGpuProcessor.cu.obj.cmake.pre-gen;T:\works\App4\build\CMakeFiles\App4.dir\src\App4_generated_NativeGpuProcessor.cu.obj.depend;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Program Files\CMake\share\cmake-4.3\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Compiler\MSVC.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\FindCUDA.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\FindCUDA\run_nvcc.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\FindCUDA\select_compute_arch.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Internal\CMakeCXXLinkerInformation.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Internal\CMakeCommonLinkerInformation.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Linker\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Linker\MSVC.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Platform\Linker\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Platform\Linker\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Platform\Windows-Initialize.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Platform\WindowsPaths.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVConfig-version.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVConfig.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVModules-debug.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVModules-release.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVModules.cmake;T:\works\App4\build\CMakeFiles\4.3.1\CMakeCXXCompiler.cmake;T:\works\App4\build\CMakeFiles\4.3.1\CMakeRCCompiler.cmake;T:\works\App4\build\CMakeFiles\4.3.1\CMakeSystem.cmake;T:\works\App4\build\CMakeFiles\App4.dir\src\App4_generated_NativeGpuProcessor.cu.obj.cmake.pre-gen;T:\works\App4\build\CMakeFiles\App4.dir\src\App4_generated_NativeGpuProcessor.cu.obj.depend;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">T:\works\App4\build\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule T:/works/App4/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
-C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\bin\cmake.exe -ST:/works/App4 -BT:/works/App4/build --check-stamp-file T:/works/App4/build/CMakeFiles/generate.stamp
+"C:\Program Files\CMake\bin\cmake.exe" -ST:/works/App4 -BT:/works/App4/build --check-stamp-file T:/works/App4/build/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -388,12 +428,12 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\CMakeCXXInformation.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\CMakeCommonLanguageInclude.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\CMakeGenericSystem.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\CMakeInitializeConfigs.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\CMakeLanguageInformation.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\CMakeRCInformation.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\CMakeSystemSpecificInformation.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\CMakeSystemSpecificInitialize.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\Compiler\MSVC-CXX.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\Compiler\MSVC.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\FindCUDA.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\FindCUDA\run_nvcc.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\FindCUDA\select_compute_arch.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\FindPackageHandleStandardArgs.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\FindPackageMessage.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\Platform\Windows-Initialize.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\Platform\Windows-MSVC.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\Platform\Windows.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\Platform\WindowsPaths.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVConfig-version.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVConfig.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVModules-debug.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVModules-release.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVModules.cmake;T:\works\App4\build\CMakeFiles\3.30.4\CMakeCXXCompiler.cmake;T:\works\App4\build\CMakeFiles\3.30.4\CMakeRCCompiler.cmake;T:\works\App4\build\CMakeFiles\3.30.4\CMakeSystem.cmake;T:\works\App4\build\CMakeFiles\App4.dir\src\App4_generated_NativeGpuProcessor.cu.obj.cmake.pre-gen;T:\works\App4\build\CMakeFiles\App4.dir\src\App4_generated_NativeGpuProcessor.cu.obj.depend;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Program Files\CMake\share\cmake-4.3\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Compiler\MSVC.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\FindCUDA.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\FindCUDA\run_nvcc.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\FindCUDA\select_compute_arch.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Internal\CMakeCXXLinkerInformation.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Internal\CMakeCommonLinkerInformation.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Linker\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Linker\MSVC.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Platform\Linker\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Platform\Linker\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Platform\Windows-Initialize.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Platform\WindowsPaths.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVConfig-version.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVConfig.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVModules-debug.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVModules-release.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVModules.cmake;T:\works\App4\build\CMakeFiles\4.3.1\CMakeCXXCompiler.cmake;T:\works\App4\build\CMakeFiles\4.3.1\CMakeRCCompiler.cmake;T:\works\App4\build\CMakeFiles\4.3.1\CMakeSystem.cmake;T:\works\App4\build\CMakeFiles\App4.dir\src\App4_generated_NativeGpuProcessor.cu.obj.cmake.pre-gen;T:\works\App4\build\CMakeFiles\App4.dir\src\App4_generated_NativeGpuProcessor.cu.obj.depend;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">T:\works\App4\build\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule T:/works/App4/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
-C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\bin\cmake.exe -ST:/works/App4 -BT:/works/App4/build --check-stamp-file T:/works/App4/build/CMakeFiles/generate.stamp
+"C:\Program Files\CMake\bin\cmake.exe" -ST:/works/App4 -BT:/works/App4/build --check-stamp-file T:/works/App4/build/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -401,12 +441,12 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\CMakeCXXInformation.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\CMakeCommonLanguageInclude.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\CMakeGenericSystem.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\CMakeInitializeConfigs.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\CMakeLanguageInformation.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\CMakeRCInformation.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\CMakeSystemSpecificInformation.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\CMakeSystemSpecificInitialize.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\Compiler\MSVC-CXX.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\Compiler\MSVC.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\FindCUDA.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\FindCUDA\run_nvcc.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\FindCUDA\select_compute_arch.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\FindPackageHandleStandardArgs.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\FindPackageMessage.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\Platform\Windows-Initialize.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\Platform\Windows-MSVC.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\Platform\Windows.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\Platform\WindowsPaths.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVConfig-version.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVConfig.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVModules-debug.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVModules-release.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVModules.cmake;T:\works\App4\build\CMakeFiles\3.30.4\CMakeCXXCompiler.cmake;T:\works\App4\build\CMakeFiles\3.30.4\CMakeRCCompiler.cmake;T:\works\App4\build\CMakeFiles\3.30.4\CMakeSystem.cmake;T:\works\App4\build\CMakeFiles\App4.dir\src\App4_generated_NativeGpuProcessor.cu.obj.cmake.pre-gen;T:\works\App4\build\CMakeFiles\App4.dir\src\App4_generated_NativeGpuProcessor.cu.obj.depend;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Program Files\CMake\share\cmake-4.3\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Compiler\MSVC.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\FindCUDA.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\FindCUDA\run_nvcc.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\FindCUDA\select_compute_arch.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Internal\CMakeCXXLinkerInformation.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Internal\CMakeCommonLinkerInformation.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Linker\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Linker\MSVC.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Platform\Linker\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Platform\Linker\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Platform\Windows-Initialize.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Platform\WindowsPaths.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVConfig-version.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVConfig.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVModules-debug.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVModules-release.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVModules.cmake;T:\works\App4\build\CMakeFiles\4.3.1\CMakeCXXCompiler.cmake;T:\works\App4\build\CMakeFiles\4.3.1\CMakeRCCompiler.cmake;T:\works\App4\build\CMakeFiles\4.3.1\CMakeSystem.cmake;T:\works\App4\build\CMakeFiles\App4.dir\src\App4_generated_NativeGpuProcessor.cu.obj.cmake.pre-gen;T:\works\App4\build\CMakeFiles\App4.dir\src\App4_generated_NativeGpuProcessor.cu.obj.depend;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">T:\works\App4\build\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule T:/works/App4/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
-C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\bin\cmake.exe -ST:/works/App4 -BT:/works/App4/build --check-stamp-file T:/works/App4/build/CMakeFiles/generate.stamp
+"C:\Program Files\CMake\bin\cmake.exe" -ST:/works/App4 -BT:/works/App4/build --check-stamp-file T:/works/App4/build/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -414,7 +454,7 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\CMakeCXXInformation.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\CMakeCommonLanguageInclude.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\CMakeGenericSystem.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\CMakeInitializeConfigs.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\CMakeLanguageInformation.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\CMakeRCInformation.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\CMakeSystemSpecificInformation.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\CMakeSystemSpecificInitialize.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\Compiler\MSVC-CXX.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\Compiler\MSVC.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\FindCUDA.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\FindCUDA\run_nvcc.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\FindCUDA\select_compute_arch.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\FindPackageHandleStandardArgs.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\FindPackageMessage.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\Platform\Windows-Initialize.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\Platform\Windows-MSVC.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\Platform\Windows.cmake;C:\Users\Anti_Matrix\Anaconda3\Lib\site-packages\cmake\data\share\cmake-3.30\Modules\Platform\WindowsPaths.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVConfig-version.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVConfig.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVModules-debug.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVModules-release.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVModules.cmake;T:\works\App4\build\CMakeFiles\3.30.4\CMakeCXXCompiler.cmake;T:\works\App4\build\CMakeFiles\3.30.4\CMakeRCCompiler.cmake;T:\works\App4\build\CMakeFiles\3.30.4\CMakeSystem.cmake;T:\works\App4\build\CMakeFiles\App4.dir\src\App4_generated_NativeGpuProcessor.cu.obj.cmake.pre-gen;T:\works\App4\build\CMakeFiles\App4.dir\src\App4_generated_NativeGpuProcessor.cu.obj.depend;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Program Files\CMake\share\cmake-4.3\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Compiler\MSVC.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\FindCUDA.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\FindCUDA\run_nvcc.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\FindCUDA\select_compute_arch.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Internal\CMakeCXXLinkerInformation.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Internal\CMakeCommonLinkerInformation.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Linker\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Linker\MSVC.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Platform\Linker\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Platform\Linker\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Platform\Windows-Initialize.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-4.3\Modules\Platform\WindowsPaths.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVConfig-version.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVConfig.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVModules-debug.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVModules-release.cmake;T:\DevloperEnvs\opencv\build\x64\vc16\lib\OpenCVModules.cmake;T:\works\App4\build\CMakeFiles\4.3.1\CMakeCXXCompiler.cmake;T:\works\App4\build\CMakeFiles\4.3.1\CMakeRCCompiler.cmake;T:\works\App4\build\CMakeFiles\4.3.1\CMakeSystem.cmake;T:\works\App4\build\CMakeFiles\App4.dir\src\App4_generated_NativeGpuProcessor.cu.obj.cmake.pre-gen;T:\works\App4\build\CMakeFiles\App4.dir\src\App4_generated_NativeGpuProcessor.cu.obj.depend;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">T:\works\App4\build\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
     </CustomBuild>
@@ -431,6 +471,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </None>
     <ClInclude Include="T:\works\App4\include\ThreadPool.hpp" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="T:\works\App4\build\ZERO_CHECK.vcxproj">
       <Project>{69BDC9D3-3D3D-3B27-8AD7-F55B134E704E}</Project>
