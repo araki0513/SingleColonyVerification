@@ -116,7 +116,7 @@ int main(){
                 (int)fovs.size()});
             for (int fi = 0; fi < (int)fovs.size(); fi++) {
                 all_futures.push_back(
-                    load_pool.enqueue([p = fovs[fi]]() { return load_img(p); }));
+                    load_pool.enqueue([p = (config.IMAGE_FOLDER / fovs[fi]).string()]() { return load_img(p); }));
                 all_meta.push_back({wi, fi});
             }
         }
