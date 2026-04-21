@@ -5,23 +5,32 @@
 #include <algorithm>
 
 NativeGpuProcessor::NativeGpuProcessor() {
-    cudaError_t err = cudaStreamCreate(&stream);
-    if (err != cudaSuccess) {
-        std::cerr << "CUDA Error: Failed to create stream: " << cudaGetErrorString(err) << std::endl;
+    for (int i = 0; i < NUM_PIPES; i++) {
+        cudaError_t err = cudaStreamCreate(&pipes[i].stream);
+        if (err != cudaSuccess) {
+            std::cerr << "CUDA Error: Failed to create stream " << i << ": " << cudaGetErrorString(err) << std::endl;
+        }
     }
 }
 
 NativeGpuProcessor::~NativeGpuProcessor() {
-    if (d_src) cudaFree(d_src);
-    if (d_tex_full) cudaFree(d_tex_full);
-    if (d_gauss_tmp) cudaFree(d_gauss_tmp);
-    if (d_dst_img) cudaFree(d_dst_img);
-    if (d_dst_tex) cudaFree(d_dst_tex);
+    for (int i = 0; i < NUM_PIPES; i++) {
+        auto& p = pipes[i];
+        if (p.stream) cudaStreamSynchronize(p.stream);
+        if (p.d_src) cudaFree(p.d_src);
+        if (p.d_tex_full) cudaFree(p.d_tex_full);
+        if (p.d_gauss_tmp) cudaFree(p.d_gauss_tmp);
+        if (p.d_dst_img) cudaFree(p.d_dst_img);
+        if (p.d_dst_tex) cudaFree(p.d_dst_tex);
+        if (p.h_src_pinned) cudaFreeHost(p.h_src_pinned);
+        if (p.h_img_pinned) cudaFreeHost(p.h_img_pinned);
+        if (p.h_tex_pinned) cudaFreeHost(p.h_tex_pinned);
+        if (p.stream) cudaStreamDestroy(p.stream);
+    }
     if (d_xofs) cudaFree(d_xofs);
     if (d_yofs) cudaFree(d_yofs);
     if (d_xalpha) cudaFree(d_xalpha);
     if (d_yalpha) cudaFree(d_yalpha);
-    if (stream) cudaStreamDestroy(stream);
 }
 
 // ============================================================================
@@ -159,114 +168,169 @@ __global__ void resize_linear_kernel(
 }
 
 // ============================================================================
-// 纯 CUDA 流水线: 全部计算在 GPU 上完成
-// 通过 --fmad=false 禁止 FMA 合成, 精确模拟 OpenCV 的 SSE2 浮点流水线
+// 缓冲区管理: 按需分配/扩容每条流水线的 device + pinned host 缓冲区
+// ============================================================================
+void NativeGpuProcessor::ensure_buffers(size_t src_size, size_t dst_size) {
+    bool need_src = (src_size > alloc_src_size);
+    bool need_dst = (dst_size > alloc_dst_size);
+    if (!need_src && !need_dst) return;
+
+    // 扩容前先等待所有流完成
+    for (int i = 0; i < NUM_PIPES; i++)
+        cudaStreamSynchronize(pipes[i].stream);
+
+    for (int i = 0; i < NUM_PIPES; i++) {
+        auto& p = pipes[i];
+        if (need_src) {
+            if (p.d_src) cudaFree(p.d_src);
+            if (p.d_tex_full) cudaFree(p.d_tex_full);
+            if (p.d_gauss_tmp) cudaFree(p.d_gauss_tmp);
+            if (p.h_src_pinned) cudaFreeHost(p.h_src_pinned);
+            cudaMalloc(&p.d_src, src_size);
+            cudaMalloc(&p.d_tex_full, src_size);
+            cudaMalloc(&p.d_gauss_tmp, src_size * sizeof(float));
+            cudaMallocHost(&p.h_src_pinned, src_size);
+        }
+        if (need_dst) {
+            if (p.d_dst_img) cudaFree(p.d_dst_img);
+            if (p.d_dst_tex) cudaFree(p.d_dst_tex);
+            if (p.h_img_pinned) cudaFreeHost(p.h_img_pinned);
+            if (p.h_tex_pinned) cudaFreeHost(p.h_tex_pinned);
+            cudaMalloc(&p.d_dst_img, dst_size);
+            cudaMalloc(&p.d_dst_tex, dst_size);
+            cudaMallocHost(&p.h_img_pinned, dst_size);
+            cudaMallocHost(&p.h_tex_pinned, dst_size);
+        }
+    }
+    if (need_src) alloc_src_size = src_size;
+    if (need_dst) alloc_dst_size = dst_size;
+}
+
+// ============================================================================
+// Resize 系数预计算 (CPU 侧, 所有 pipeline 共享)
+// ============================================================================
+void NativeGpuProcessor::ensure_coefficients(int sw, int sh, int dw, int dh) {
+    if (sw == last_coeff_sw && sh == last_coeff_sh && dw == last_coeff_dw && dh == last_coeff_dh)
+        return;
+    last_coeff_sw = sw; last_coeff_sh = sh;
+    last_coeff_dw = dw; last_coeff_dh = dh;
+
+    double inv_sx = (double)dw / (double)sw;
+    double inv_sy = (double)dh / (double)sh;
+    double sc_x = 1.0 / inv_sx;
+    double sc_y = 1.0 / inv_sy;
+
+    std::vector<int> h_xofs(dw);
+    std::vector<short> h_xalpha(dw * 2);
+    int xmin = 0, xmax = dw;
+    for (int dx = 0; dx < dw; dx++) {
+        float ffx = (float)((dx + 0.5) * sc_x - 0.5);
+        int ssx = (int)floorf(ffx);
+        ffx -= ssx;
+        if (ssx < 0) { ffx = 0; ssx = 0; xmin = dx + 1; }
+        if (ssx >= sw - 1) { ffx = 0; ssx = sw - 1; xmax = std::min(xmax, dx); }
+        h_xofs[dx] = ssx;
+        h_xalpha[dx * 2] = (short)cvRound((1.0f - ffx) * 2048.0f);
+        h_xalpha[dx * 2 + 1] = (short)cvRound(ffx * 2048.0f);
+    }
+
+    std::vector<int> h_yofs(dh);
+    std::vector<short> h_yalpha(dh * 2);
+    for (int dy = 0; dy < dh; dy++) {
+        float ffy = (float)((dy + 0.5) * sc_y - 0.5);
+        int ssy = (int)floorf(ffy);
+        ffy -= ssy;
+        if (ssy < 0) { ffy = 0; ssy = 0; }
+        if (ssy >= sh - 1) { ffy = 0; ssy = sh - 1; }
+        h_yofs[dy] = ssy;
+        h_yalpha[dy * 2] = (short)cvRound((1.0f - ffy) * 2048.0f);
+        h_yalpha[dy * 2 + 1] = (short)cvRound(ffy * 2048.0f);
+    }
+
+    if (d_xofs) cudaFree(d_xofs);
+    if (d_yofs) cudaFree(d_yofs);
+    if (d_xalpha) cudaFree(d_xalpha);
+    if (d_yalpha) cudaFree(d_yalpha);
+    cudaMalloc(&d_xofs, dw * sizeof(int));
+    cudaMalloc(&d_yofs, dh * sizeof(int));
+    cudaMalloc(&d_xalpha, dw * 2 * sizeof(short));
+    cudaMalloc(&d_yalpha, dh * 2 * sizeof(short));
+    cudaMemcpy(d_xofs, h_xofs.data(), dw * sizeof(int), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_yofs, h_yofs.data(), dh * sizeof(int), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_xalpha, h_xalpha.data(), dw * 2 * sizeof(short), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_yalpha, h_yalpha.data(), dh * 2 * sizeof(short), cudaMemcpyHostToDevice);
+    resize_xmin = xmin;
+    resize_xmax = xmax;
+}
+
+// ============================================================================
+// 异步提交: memcpy 到 pinned → 入队 H2D + kernels + D2H, 立即返回
+// ============================================================================
+int NativeGpuProcessor::submit(const uint8_t* h_src, int sw, int sh,
+                                int dw, int dh, int radius) {
+    size_t src_size = (size_t)sw * sh;
+    size_t dst_size = (size_t)dw * dh;
+
+    ensure_buffers(src_size, dst_size);
+    ensure_coefficients(sw, sh, dw, dh);
+
+    int p = next_pipe;
+    next_pipe = (next_pipe + 1) % NUM_PIPES;
+    auto& pipe = pipes[p];
+
+    // CPU→pinned (同步, ~0.5ms for 1958×1958)
+    memcpy(pipe.h_src_pinned, h_src, src_size);
+
+    // 异步 H2D (从 pinned memory 才是真正异步)
+    cudaMemcpyAsync(pipe.d_src, pipe.h_src_pinned, src_size, cudaMemcpyHostToDevice, pipe.stream);
+
+    dim3 block(16, 16);
+    dim3 grid_src((sw + 15) / 16, (sh + 15) / 16);
+    dim3 grid_dst((dw + 15) / 16, (dh + 15) / 16);
+
+    // Step 1: 全分辨率纹理特征 (dilate-erode-subtract 融合)
+    texture_full_kernel<<<grid_src, block, 0, pipe.stream>>>(pipe.d_src, pipe.d_tex_full, sw, sh, radius);
+
+    // Step 2: 高斯模糊行滤波 (uint8 → float)
+    gauss_row_kernel<<<grid_src, block, 0, pipe.stream>>>(pipe.d_tex_full, pipe.d_gauss_tmp, sw, sh);
+
+    // Step 3: 高斯模糊列滤波 (float → uint8, 结果覆写 d_tex_full)
+    gauss_col_kernel<<<grid_src, block, 0, pipe.stream>>>(pipe.d_gauss_tmp, pipe.d_tex_full, sw, sh);
+
+    // Step 4 & 5: 双线性缩放 (使用预计算系数, 所有 pipeline 共享)
+    resize_linear_kernel<<<grid_dst, block, 0, pipe.stream>>>(
+        pipe.d_src, pipe.d_dst_img, sw, sh, dw, dh,
+        d_xofs, d_xalpha, d_yofs, d_yalpha, resize_xmin, resize_xmax);
+    resize_linear_kernel<<<grid_dst, block, 0, pipe.stream>>>(
+        pipe.d_tex_full, pipe.d_dst_tex, sw, sh, dw, dh,
+        d_xofs, d_xalpha, d_yofs, d_yalpha, resize_xmin, resize_xmax);
+
+    // 异步 D2H → pinned memory
+    cudaMemcpyAsync(pipe.h_img_pinned, pipe.d_dst_img, dst_size, cudaMemcpyDeviceToHost, pipe.stream);
+    cudaMemcpyAsync(pipe.h_tex_pinned, pipe.d_dst_tex, dst_size, cudaMemcpyDeviceToHost, pipe.stream);
+
+    return p;
+}
+
+// ============================================================================
+// 等待指定 pipeline 完成, 将 pinned memory 中的结果拷贝给调用方
+// ============================================================================
+void NativeGpuProcessor::wait(int pipe_idx, uint8_t* h_img_s, uint8_t* h_tex_s,
+                               int dw, int dh) {
+    auto& pipe = pipes[pipe_idx];
+    cudaStreamSynchronize(pipe.stream);
+
+    size_t dst_size = (size_t)dw * dh;
+    memcpy(h_img_s, pipe.h_img_pinned, dst_size);
+    memcpy(h_tex_s, pipe.h_tex_pinned, dst_size);
+}
+
+// ============================================================================
+// 同步便捷接口 (submit + wait)
 // ============================================================================
 void NativeGpuProcessor::process(const uint8_t* h_src, int sw, int sh,
                                   uint8_t* h_img_s, uint8_t* h_tex_s,
                                   int dw, int dh, int radius, int scale) {
-    size_t src_size = (size_t)sw * sh;
-    size_t dst_size = (size_t)dw * dh;
-
-    // 按需分配/扩容 GPU 缓冲区
-    if (src_size > last_src_size) {
-        if (d_src) cudaFree(d_src);
-        if (d_tex_full) cudaFree(d_tex_full);
-        if (d_gauss_tmp) cudaFree(d_gauss_tmp);
-        cudaMalloc(&d_src, src_size);
-        cudaMalloc(&d_tex_full, src_size);
-        cudaMalloc(&d_gauss_tmp, src_size * sizeof(float));
-        last_src_size = src_size;
-    }
-    if (dst_size > last_dst_size) {
-        if (d_dst_img) cudaFree(d_dst_img);
-        if (d_dst_tex) cudaFree(d_dst_tex);
-        cudaMalloc(&d_dst_img, dst_size);
-        cudaMalloc(&d_dst_tex, dst_size);
-        last_dst_size = dst_size;
-    }
-
-    // 按需预计算 resize 系数 (CPU 侧, 精确匹配 OpenCV)
-    if (sw != last_coeff_sw || sh != last_coeff_sh || dw != last_coeff_dw || dh != last_coeff_dh) {
-        last_coeff_sw = sw; last_coeff_sh = sh;
-        last_coeff_dw = dw; last_coeff_dh = dh;
-
-        double inv_sx = (double)dw / (double)sw;
-        double inv_sy = (double)dh / (double)sh;
-        double sc_x = 1.0 / inv_sx;
-        double sc_y = 1.0 / inv_sy;
-
-        std::vector<int> h_xofs(dw);
-        std::vector<short> h_xalpha(dw * 2);
-        int xmin = 0, xmax = dw;
-        for (int dx = 0; dx < dw; dx++) {
-            // 关键: 使用 float 存储坐标 (匹配 OpenCV resize.cpp 的 "float fx, fy")
-            float ffx = (float)((dx + 0.5) * sc_x - 0.5);
-            int ssx = (int)floorf(ffx);
-            ffx -= ssx;
-            if (ssx < 0) { ffx = 0; ssx = 0; xmin = dx + 1; }
-            if (ssx >= sw - 1) { ffx = 0; ssx = sw - 1; xmax = std::min(xmax, dx); }
-            h_xofs[dx] = ssx;
-            h_xalpha[dx * 2] = (short)cvRound((1.0f - ffx) * 2048.0f);
-            h_xalpha[dx * 2 + 1] = (short)cvRound(ffx * 2048.0f);
-        }
-
-        std::vector<int> h_yofs(dh);
-        std::vector<short> h_yalpha(dh * 2);
-        for (int dy = 0; dy < dh; dy++) {
-            float ffy = (float)((dy + 0.5) * sc_y - 0.5);
-            int ssy = (int)floorf(ffy);
-            ffy -= ssy;
-            if (ssy < 0) { ffy = 0; ssy = 0; }
-            if (ssy >= sh - 1) { ffy = 0; ssy = sh - 1; }
-            h_yofs[dy] = ssy;
-            h_yalpha[dy * 2] = (short)cvRound((1.0f - ffy) * 2048.0f);
-            h_yalpha[dy * 2 + 1] = (short)cvRound(ffy * 2048.0f);
-        }
-
-        // 分配 GPU 系数缓冲区并上传
-        if (d_xofs) cudaFree(d_xofs);
-        if (d_yofs) cudaFree(d_yofs);
-        if (d_xalpha) cudaFree(d_xalpha);
-        if (d_yalpha) cudaFree(d_yalpha);
-        cudaMalloc(&d_xofs, dw * sizeof(int));
-        cudaMalloc(&d_yofs, dh * sizeof(int));
-        cudaMalloc(&d_xalpha, dw * 2 * sizeof(short));
-        cudaMalloc(&d_yalpha, dh * 2 * sizeof(short));
-        cudaMemcpy(d_xofs, h_xofs.data(), dw * sizeof(int), cudaMemcpyHostToDevice);
-        cudaMemcpy(d_yofs, h_yofs.data(), dh * sizeof(int), cudaMemcpyHostToDevice);
-        cudaMemcpy(d_xalpha, h_xalpha.data(), dw * 2 * sizeof(short), cudaMemcpyHostToDevice);
-        cudaMemcpy(d_yalpha, h_yalpha.data(), dh * 2 * sizeof(short), cudaMemcpyHostToDevice);
-        resize_xmin = xmin;
-        resize_xmax = xmax;
-    }
-
-    // H2D: 上传源图像
-    cudaMemcpyAsync(d_src, h_src, src_size, cudaMemcpyHostToDevice, stream);
-
-    dim3 block(16, 16);
-
-    // Step 1: 全分辨率纹理特征 (dilate-erode-subtract 融合)
-    dim3 grid_src((sw + 15) / 16, (sh + 15) / 16);
-    texture_full_kernel<<<grid_src, block, 0, stream>>>(d_src, d_tex_full, sw, sh, radius);
-
-    // Step 2: 高斯模糊行滤波 (uint8 → float)
-    gauss_row_kernel<<<grid_src, block, 0, stream>>>(d_tex_full, d_gauss_tmp, sw, sh);
-
-    // Step 3: 高斯模糊列滤波 (float → uint8, 结果覆写 d_tex_full)
-    gauss_col_kernel<<<grid_src, block, 0, stream>>>(d_gauss_tmp, d_tex_full, sw, sh);
-
-    // Step 4 & 5: 双线性缩放 (使用预计算系数)
-    dim3 grid_dst((dw + 15) / 16, (dh + 15) / 16);
-    resize_linear_kernel<<<grid_dst, block, 0, stream>>>(
-        d_src, d_dst_img, sw, sh, dw, dh,
-        d_xofs, d_xalpha, d_yofs, d_yalpha, resize_xmin, resize_xmax);
-    resize_linear_kernel<<<grid_dst, block, 0, stream>>>(
-        d_tex_full, d_dst_tex, sw, sh, dw, dh,
-        d_xofs, d_xalpha, d_yofs, d_yalpha, resize_xmin, resize_xmax);
-
-    // D2H: 下载结果
-    cudaMemcpyAsync(h_img_s, d_dst_img, dst_size, cudaMemcpyDeviceToHost, stream);
-    cudaMemcpyAsync(h_tex_s, d_dst_tex, dst_size, cudaMemcpyDeviceToHost, stream);
-    cudaStreamSynchronize(stream);
+    int p = submit(h_src, sw, sh, dw, dh, radius);
+    wait(p, h_img_s, h_tex_s, dw, dh);
 }

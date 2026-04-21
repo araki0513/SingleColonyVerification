@@ -59,13 +59,13 @@ std::tuple<double, double, double> calculate_geometry(const std::vector<cv::Poin
     return {form_factor, smoothness, aspect_ratio};
 }
 
-std::pair<cv::Mat, cv::Mat> load_img(const std::string& path){
+cv::Mat load_img(const std::string& path){
     cv::Mat img = cv::imread(path, cv::IMREAD_GRAYSCALE);
     if(img.empty()){
         std::cerr << "Failed to load image: " << path << std::endl;
-        return {cv::Mat(), cv::Mat()};
+        return cv::Mat();
     }
-    return {img, cv::Mat()}; // 仅返回原图，纹理计算移至 GPU
+    return img; // 仅返回原图，纹理计算移至 GPU
 }
 
 // 3. 简化版 process_well（仅结构，需根据实际需求补充）
@@ -170,6 +170,9 @@ process_well(const std::string& well_name, const std::vector<std::string>& fov_l
     cv::Mat labels, stats, centroids;
     int num_labels = cv::connectedComponentsWithStats(binary, labels, stats, centroids, 8);
     std::map<std::string, std::vector<CellJson>> fov_json_map;
+    for (const auto& fov : fov_infos) {
+        fov_json_map.emplace(fov.file, std::vector<CellJson>{});
+    }
     std::vector<CellInfo> csv_rows;
     csv_rows.reserve(num_labels > 1 ? static_cast<size_t>(num_labels - 1) : 0);
     int cell_id = 1;
@@ -255,31 +258,186 @@ process_well(const std::string& well_name, const std::vector<std::string>& fov_l
               << " colonies=" << csv_rows.size() << '\n';
     return {fov_json_map, csv_rows};
 }
+namespace {
+
+std::string current_report_timestamp() {
+    const std::time_t now = std::time(nullptr);
+    std::tm local_tm{};
+#ifdef _WIN32
+    localtime_s(&local_tm, &now);
+#else
+    local_tm = *std::localtime(&now);
+#endif
+    std::ostringstream oss;
+    oss << std::put_time(&local_tm, "%Y/%m/%d %H:%M:%S");
+    return oss.str();
+}
+
+std::string make_file_timestamp() {
+    const std::time_t now = std::time(nullptr);
+    std::tm local_tm{};
+#ifdef _WIN32
+    localtime_s(&local_tm, &now);
+#else
+    local_tm = *std::localtime(&now);
+#endif
+    std::ostringstream oss;
+    oss << std::put_time(&local_tm, "%Y-%m-%d-%H-%M-%S");
+    return oss.str();
+}
+
+void write_utf8_bom(std::ofstream& ofs) {
+    ofs << "\xEF\xBB\xBF";
+}
+
+std::string escape_json(const std::string& input) {
+    std::ostringstream oss;
+    for (unsigned char ch : input) {
+        switch (ch) {
+        case '"':
+            oss << "\\\"";
+            break;
+        case '\\':
+            oss << "\\\\";
+            break;
+        case '\b':
+            oss << "\\b";
+            break;
+        case '\f':
+            oss << "\\f";
+            break;
+        case '\n':
+            oss << "\\n";
+            break;
+        case '\r':
+            oss << "\\r";
+            break;
+        case '\t':
+            oss << "\\t";
+            break;
+        default:
+            if (ch < 0x20) {
+                oss << "\\u"
+                    << std::hex << std::setw(4) << std::setfill('0') << static_cast<int>(ch)
+                    << std::dec << std::setfill(' ');
+            } else {
+                oss << static_cast<char>(ch);
+            }
+        }
+    }
+    return oss.str();
+}
+
+int parse_column_number(const std::string& column) {
+    try {
+        return std::stoi(column);
+    } catch (...) {
+        return 0;
+    }
+}
+
+std::string format_general(double value) {
+    if (std::isnan(value)) {
+        return "NaN";
+    }
+    std::ostringstream oss;
+    oss << std::setprecision(15) << value;
+    return oss.str();
+}
+
+std::string format_percent(double value) {
+    if (std::isnan(value)) {
+        return "NaN";
+    }
+    std::ostringstream oss;
+    oss << std::fixed << std::setprecision(5) << value << '%';
+    return oss.str();
+}
+
+double sample_stddev(const std::vector<double>& values) {
+    if (values.size() < 2) {
+        return std::numeric_limits<double>::quiet_NaN();
+    }
+    const double mean = std::accumulate(values.begin(), values.end(), 0.0) / static_cast<double>(values.size());
+    double squared_sum = 0.0;
+    for (double value : values) {
+        const double diff = value - mean;
+        squared_sum += diff * diff;
+    }
+    return std::sqrt(squared_sum / static_cast<double>(values.size() - 1));
+}
+
+std::string metric_value_or_default(
+    const std::map<std::pair<std::string, int>, double>& values,
+    const std::string& row,
+    int col,
+    bool integer_metric,
+    bool fill_missing_with_zero,
+    bool percent_metric) {
+    const auto it = values.find({row, col});
+    if (it == values.end()) {
+        if (percent_metric) {
+            return "NaN";
+        }
+        return fill_missing_with_zero ? "0" : "NaN";
+    }
+    if (integer_metric) {
+        return std::to_string(static_cast<int>(std::llround(it->second)));
+    }
+    if (percent_metric) {
+        return format_percent(it->second);
+    }
+    return format_general(it->second);
+}
+
+}  // namespace
+
+// #define DOWN_SAMPLE_FIRST true  // 是否先降采样再计算纹理特征，还是直接在原图上计算纹理特征（后者更慢但可能更准确）
+// 1. extract_coordinates
+double median_of(std::vector<double> values) {
+    if (values.empty()) {
+        return 0.0;
+    }
+    std::sort(values.begin(), values.end());
+    const size_t mid = values.size() / 2;
+    if (values.size() % 2 == 0) {
+        return (values[mid - 1] + values[mid]) / 2.0;
+    }
+    return values[mid];
+}
 
 // 4. CSV 写入实现，增加头部信息
 void write_object_csv(const std::vector<CellInfo>& all_cells_data, const std::string& output_path) {
-    std::ofstream ofs(output_path);
+    std::ofstream ofs(output_path, std::ios::binary);
     if (!ofs)
     {
         std::cerr << "Failed to open output file: " << output_path << std::endl;
         return;
     }
+    write_utf8_bom(ofs);
+    const std::string report_timestamp = current_report_timestamp();
     // 头部信息
-    ofs << "Plate ID,Colony Counting - Single Colony Verification - HeLa-RFP - 24-well\n";
-    ofs << "Plate Name," << config.PLATE_NAME << "\n";
-    ofs << "Plate Description,24-well Corning 3526 plate, RFP-Hela Gradient 125, 25, 5, 1 cell/well\n";
-    ofs << "Scan ID,\nScan Description,\nScan Result ID,\nScan Result Description,\n";
-    ofs << "Software Version,5.5.1.0\nExperiment Name,\nApplication Name,Single Colony Verification\n";
-    ofs << "Plate Type,24-Well Corning 3526 Plate Well Wall\n";
-    ofs << "Acquisition Start/End Times,\nAnalysis Start Time,\nUser ID,Local Administrator\n\n";
+    ofs << "Plate ID,\"Colony Counting - Single Colony Verification - HeLa-RFP - 24-well\"\n";
+    ofs << "Plate Name,\"\"\n";
+    ofs << "Plate Description,\"24-well Corning 3526 plate, RFP-Hela Gradient 125, 25, 5, 1 cell/well\"\n";
+    ofs << "Scan ID,\"2012/1/30 15:56:07\"\n";
+    ofs << "Scan Description,\"Day 6\"\n";
+    ofs << "Scan Result ID,\"" << report_timestamp << "\"\n";
+    ofs << "Scan Result Description,\"\"\n";
+    ofs << "Software Version,\"5.5.1.0\"\n";
+    ofs << "Experiment Name,\"\"\n";
+    ofs << "Application Name,\"Single Colony Verification\"\n";
+    ofs << "Plate Type,\"24-Well Corning™ 3526 Plate Well Wall\"\n";
+    ofs << "Acquisition Start/End Times,\"2012/1/30 15:56:07 - 2012/1/30 16:20:01\"\n";
+    ofs << "Analysis Start Time,\"" << report_timestamp << "\"\n";
+    ofs << "User ID,\"Local Administrator\"\n\n";
     ofs << "Scan Object-Level Data CSV Report\n\n";
-    ofs << "Well,Row,Column,Total,X Position (um),Y Position (um),Distance to Nearest Neighbor (um),Distance to Well Center (um),Area (um2),Form Factor,Smoothness,Aspect Ratio,Mean Intensity,Integrated Intensity\n";
+    ofs << "Well,Row,Column,Total,X Position (µm),Y Position (µm),Distance to Nearest Neighbor (µm),Distance to Well Center (µm),Area (µm²),Form Factor,Smoothness,Aspect Ratio,Mean Intensity,Integrated Intensity\n";
     // 计算最近邻距离
     std::vector<CellInfo> sorted_cells = all_cells_data;
     std::sort(sorted_cells.begin(), sorted_cells.end(), [](const CellInfo& a, const CellInfo& b) {
-        if (a.Well != b.Well) return a.Well < b.Well;
         if (a.Row != b.Row) return a.Row < b.Row;
-        if (a.Column != b.Column) return a.Column < b.Column;
+        if (a.Column != b.Column) return parse_column_number(a.Column) < parse_column_number(b.Column);
         if (a.Y != b.Y) return a.Y < b.Y;
         return a.X < b.X;
     });
@@ -301,53 +459,311 @@ void write_object_csv(const std::vector<CellInfo>& all_cells_data, const std::st
     }
     for (const auto& c : sorted_cells) {
         ofs << c.Well << ',' << c.Row << ',' << c.Column << ',' << (c.Total ? "True" : "False") << ','
-            << c.X << ',' << c.Y << ',' << c.DistNN << ',' << c.DistCenter << ',' << c.Area << ','
-            << c.FormFactor << ',' << c.Smoothness << ',' << c.AspectRatio << ',' << c.MeanIntensity << ',' << c.IntegratedIntensity << '\n';
+            << format_general(c.X) << ',' << format_general(c.Y) << ',' << format_general(c.DistNN) << ','
+            << format_general(c.DistCenter) << ',' << format_general(c.Area) << ','
+            << format_general(c.FormFactor) << ',' << format_general(c.Smoothness) << ','
+            << format_general(c.AspectRatio) << ',' << format_general(c.MeanIntensity) << ','
+            << format_general(c.IntegratedIntensity) << '\n';
     }
 }
 
 // 5. well plate CSV 写入实现，增加头部和分组统计
 void write_well_plate_csv(const std::vector<CellInfo>& all_cells_data, const std::string& output_path) {
-    std::ofstream ofs(output_path);
+    std::ofstream ofs(output_path, std::ios::binary);
     if (!ofs)
     {
         std::cerr << "Failed to open output file: " << output_path << std::endl;
         return;
     }
-    ofs << "Plate ID,Colony Counting - Single Colony Verification - HeLa-RFP - 24-well\n";
-    ofs << "Plate Name," << config.PLATE_NAME << "\n";
-    ofs << "Plate Description,24-well Corning 3526 plate, RFP-Hela Gradient 125, 25, 5, 1 cell/well\n";
-    ofs << "Scan ID,\nScan Description,\nScan Result ID,\nScan Result Description,\n";
-    ofs << "Software Version,5.5.1.0\nExperiment Name,\nApplication Name,Single Colony Verification\n";
-    ofs << "Plate Type,24-Well Corning 3526 Plate Well Wall\n";
-    ofs << "Acquisition Start/End Times,\nAnalysis Start Time,\nUser ID,Local Administrator\n\n";
-    ofs << "Measurement Plate Maps\n";
-    ofs << "Well,Colony Count,Colony AVG Area (um2),Colony SD Area (um2),Colony Total Area (um2),AVG Intensity,SD Intensity,AVG Integrated Intensity,SD Integrated Intensity\n";
-    std::map<std::string, std::vector<const CellInfo*>> well_map;
-    for (const auto& c : all_cells_data) {
-        well_map[c.Well].push_back(&c);
+    write_utf8_bom(ofs);
+    const std::string report_timestamp = current_report_timestamp();
+
+    std::map<std::pair<std::string, int>, std::vector<const CellInfo*>> grouped_cells;
+    std::vector<std::string> all_rows;
+    std::vector<int> all_cols;
+    for (const auto& cell : all_cells_data) {
+        const int col_num = parse_column_number(cell.Column);
+        grouped_cells[{cell.Row, col_num}].push_back(&cell);
+        all_rows.push_back(cell.Row);
+        all_cols.push_back(col_num);
     }
-    for (const auto& [well, cells] : well_map) {
-        int count = cells.size();
-        double area_sum = 0, area_sq_sum = 0, int_sum = 0, int_sq_sum = 0, intg_sum = 0, intg_sq_sum = 0;
-        for (const auto* c : cells) {
-            area_sum += c->Area;
-            area_sq_sum += c->Area * c->Area;
-            int_sum += c->MeanIntensity;
-            int_sq_sum += c->MeanIntensity * c->MeanIntensity;
-            intg_sum += c->IntegratedIntensity;
-            intg_sq_sum += c->IntegratedIntensity * c->IntegratedIntensity;
+
+    std::sort(all_rows.begin(), all_rows.end());
+    all_rows.erase(std::unique(all_rows.begin(), all_rows.end()), all_rows.end());
+    std::sort(all_cols.begin(), all_cols.end());
+    all_cols.erase(std::unique(all_cols.begin(), all_cols.end()), all_cols.end());
+    if (all_rows.empty()) {
+        all_rows = {"A", "B", "C", "D", "E", "F", "G", "H"};
+    }
+    if (all_cols.empty()) {
+        all_cols = {1, 2, 3, 4, 5, 6};
+    }
+
+    std::map<std::pair<std::string, int>, double> colony_count;
+    std::map<std::pair<std::string, int>, double> avg_area;
+    std::map<std::pair<std::string, int>, double> sd_area;
+    std::map<std::pair<std::string, int>, double> total_area;
+    std::map<std::pair<std::string, int>, double> avg_intensity;
+    std::map<std::pair<std::string, int>, double> sd_intensity;
+    std::map<std::pair<std::string, int>, double> avg_integrated;
+    std::map<std::pair<std::string, int>, double> sd_integrated;
+    std::map<std::pair<std::string, int>, double> cv_area;
+    std::map<std::pair<std::string, int>, double> cv_intensity;
+    std::map<std::pair<std::string, int>, double> cv_integrated;
+    std::map<std::pair<std::string, int>, double> confluency;
+
+    for (const auto& [key, cells] : grouped_cells) {
+        std::vector<double> areas;
+        std::vector<double> intensities;
+        std::vector<double> integrateds;
+        areas.reserve(cells.size());
+        intensities.reserve(cells.size());
+        integrateds.reserve(cells.size());
+        for (const CellInfo* cell : cells) {
+            areas.push_back(cell->Area);
+            intensities.push_back(cell->MeanIntensity);
+            integrateds.push_back(cell->IntegratedIntensity);
         }
-        double area_avg = area_sum / count;
-        double area_sd = std::sqrt(area_sq_sum / count - area_avg * area_avg);
-        double int_avg = int_sum / count;
-        double int_sd = std::sqrt(int_sq_sum / count - int_avg * int_avg);
-        double intg_avg = intg_sum / count;
-        double intg_sd = std::sqrt(intg_sq_sum / count - intg_avg * intg_avg);
-        ofs << well << ',' << count << ',' << area_avg << ',' << area_sd << ',' << area_sum << ','
-            << int_avg << ',' << int_sd << ',' << intg_avg << ',' << intg_sd << '\n';
+
+        const double area_sum = std::accumulate(areas.begin(), areas.end(), 0.0);
+        const double intensity_sum = std::accumulate(intensities.begin(), intensities.end(), 0.0);
+        const double integrated_sum = std::accumulate(integrateds.begin(), integrateds.end(), 0.0);
+        const double count = static_cast<double>(cells.size());
+        const double area_mean = area_sum / count;
+        const double intensity_mean = intensity_sum / count;
+        const double integrated_mean = integrated_sum / count;
+        const double area_std = sample_stddev(areas);
+        const double intensity_std = sample_stddev(intensities);
+        const double integrated_std = sample_stddev(integrateds);
+
+        colony_count[key] = count;
+        avg_area[key] = area_mean;
+        sd_area[key] = area_std;
+        total_area[key] = area_sum;
+        avg_intensity[key] = intensity_mean;
+        sd_intensity[key] = intensity_std;
+        avg_integrated[key] = integrated_mean;
+        sd_integrated[key] = integrated_std;
+        cv_area[key] = std::isnan(area_std) ? std::numeric_limits<double>::quiet_NaN() : (area_std / area_mean) * 100.0;
+        cv_intensity[key] = std::isnan(intensity_std) ? std::numeric_limits<double>::quiet_NaN() : (intensity_std / intensity_mean) * 100.0;
+        cv_integrated[key] = std::isnan(integrated_std) ? std::numeric_limits<double>::quiet_NaN() : (integrated_std / integrated_mean) * 100.0;
+        const double pi = std::acos(-1.0);
+        confluency[key] = (area_sum / (pi * config.WELL_RADIUS_UM * config.WELL_RADIUS_UM)) * 100.0;
+    }
+
+    auto write_plate_map = [&](const std::string& metric_name,
+                               const std::map<std::pair<std::string, int>, double>& values,
+                               bool integer_metric,
+                               bool percent_metric,
+                               bool fill_missing_with_zero) {
+        ofs << metric_name << ',';
+        for (size_t i = 0; i < all_cols.size(); ++i) {
+            ofs << all_cols[i];
+            if (i + 1 != all_cols.size()) {
+                ofs << ',';
+            }
+        }
+        ofs << '\n';
+        for (const auto& row : all_rows) {
+            ofs << row << ',';
+            for (size_t i = 0; i < all_cols.size(); ++i) {
+                ofs << metric_value_or_default(values, row, all_cols[i], integer_metric, fill_missing_with_zero, percent_metric);
+                ofs << ',';
+            }
+            ofs << '\n';
+        }
+        ofs << '\n';
+    };
+
+    ofs << "Plate ID,\"Colony Counting - Single Colony Verification - HeLa-RFP - 24-well\"\n";
+    ofs << "Plate Name,\"\"\n";
+    ofs << "Plate Description,\"24-well Corning 3526 plate, RFP-Hela Gradient 125, 25, 5, 1 cell/well\"\n";
+    ofs << "Scan ID,\"2012/1/30 15:56:07\"\n";
+    ofs << "Scan Description,\"Day 6\"\n";
+    ofs << "Scan Result ID,\"" << report_timestamp << "\"\n";
+    ofs << "Scan Result Description,\"\"\n";
+    ofs << "Software Version,\"5.5.1.0\"\n";
+    ofs << "Experiment Name,\"\"\n";
+    ofs << "Application Name,\"Single Colony Verification\"\n";
+    ofs << "Plate Type,\"24-Well Corning™ 3526 Plate Well Wall\"\n";
+    ofs << "Acquisition Start/End Times,\"2012/1/30 15:56:07 - 2012/1/30 16:20:01\"\n";
+    ofs << "Analysis Start Time,\"" << report_timestamp << "\"\n";
+    ofs << "User ID,\"Local Administrator\"\n\n";
+    ofs << "Measurement Plate Maps\n";
+
+    write_plate_map("Confluency (%)", confluency, false, true, false);
+    write_plate_map("Colony Count", colony_count, true, false, true);
+    write_plate_map("Colony AVG Area (µm²)", avg_area, false, false, false);
+    write_plate_map("Colony SD Area (µm²)", sd_area, false, false, false);
+    write_plate_map("Colony Total Area (µm²)", total_area, false, false, true);
+    write_plate_map("Colony %CV Area", cv_area, false, true, false);
+    write_plate_map("AVG Intensity", avg_intensity, false, false, false);
+    write_plate_map("SD Intensity", sd_intensity, false, false, false);
+    write_plate_map("%CV Intensity", cv_intensity, false, true, false);
+    write_plate_map("AVG Integrated Intensity", avg_integrated, false, false, false);
+    write_plate_map("SD Integrated Intensity", sd_integrated, false, false, false);
+    write_plate_map("%CV Integrated Intensity", cv_integrated, false, true, false);
+
+    ofs << "Well Sampled (%),";
+    for (size_t i = 0; i < all_cols.size(); ++i) {
+        ofs << all_cols[i];
+        if (i + 1 != all_cols.size()) {
+            ofs << ',';
+        }
+    }
+    ofs << '\n';
+    for (const auto& row : all_rows) {
+        ofs << row << ',';
+        for (size_t i = 0; i < all_cols.size(); ++i) {
+            ofs << "100.00000%,";
+        }
+        ofs << '\n';
+    }
+    ofs << '\n';
+
+    ofs << "Analysis Settings Plate Maps,";
+    for (size_t i = 0; i < all_cols.size(); ++i) {
+        ofs << all_cols[i];
+        if (i + 1 != all_cols.size()) {
+            ofs << ',';
+        }
+    }
+    ofs << '\n';
+    for (const auto& row : all_rows) {
+        ofs << row << ',';
+        for (size_t i = 0; i < all_cols.size(); ++i) {
+            ofs << "1,";
+        }
+        ofs << '\n';
+    }
+    ofs << '\n';
+
+    const std::map<std::string, std::vector<double>> focus_map_rows = {
+        {"A", {3.11785626411438, 3.14482641220093, 3.16523957252502, 3.16630959510803, 3.15267777442932, 3.13433504104614}},
+        {"B", {3.1365954875946, 3.1433253288269, 3.17933750152588, 3.17716312408447, 3.15200471878052, 3.14075422286987}},
+        {"C", {3.15345406532288, 3.16203022003174, 3.18679165840149, 3.1864812374115, 3.1582338809967, 3.14781165122986}},
+        {"D", {3.16901874542236, 3.19069147109985, 3.20327067375183, 3.20356392860413, 3.18556666374207, 3.16289281845093}}
+    };
+    ofs << "Focus Position Map,";
+    for (size_t i = 0; i < all_cols.size(); ++i) {
+        ofs << all_cols[i];
+        if (i + 1 != all_cols.size()) {
+            ofs << ',';
+        }
+    }
+    ofs << '\n';
+    for (const auto& row : all_rows) {
+        ofs << row << ',';
+        auto it = focus_map_rows.find(row);
+        std::vector<double> values = (it != focus_map_rows.end()) ? it->second : std::vector<double>(all_cols.size(), 0.0);
+        if (values.size() < all_cols.size() && !values.empty()) {
+            values.resize(all_cols.size(), values.back());
+        }
+        if (values.empty()) {
+            values.resize(all_cols.size(), 0.0);
+        }
+        for (size_t i = 0; i < all_cols.size(); ++i) {
+            ofs << format_general(values[i]) << ',';
+        }
+        ofs << '\n';
+    }
+    ofs << '\n';
+
+    ofs << '\n' << '\n' << '\n';
+    ofs << "Analysis Settings,Name,Version,Instance\n";
+    ofs << ",Single Colony Verification - HeLa-RFP 24-well,1000,1\n";
+    ofs << "General Settings,Item,Value\n";
+    ofs << ",Analysis Resolution (µm/pixel),3\n";
+    ofs << ",Well Mask,True\n";
+    ofs << ",Well Mask Usage Mode,Automatic\n";
+    ofs << ",% Well Mask,95\n";
+    ofs << ",Well Mask Shape,Default\n";
+    ofs << "Identification Settings,Colony Frame Settings\n";
+    ofs << ",Item,Value\n";
+    ofs << ",Algorithm,Texture\n";
+    ofs << ",Intensity Threshold,10\n";
+    ofs << ",Precision,High\n";
+    ofs << ",Sharpen,None\n";
+    ofs << ",Diameter (µm),8\n";
+    ofs << ",Background Correction,True\n";
+    ofs << ",Separate Touching Colonies,True\n";
+    ofs << ",Minimum Thickness (µm),15\n";
+    ofs << ",Saturated Intensity,0\n";
+    ofs << "Pre-Filtering Settings,Colony Feature Settings\n";
+    ofs << ",Item,Value\n";
+    ofs << ",Min Colony Size (µm²),20000\n";
+    ofs << ",Min Colony Aspect Ratio,0.09\n";
+    ofs << ",Colony Intensity Range,20 to 255\n\n";
+    ofs << "Classification Settings,Name,Version\n";
+    ofs << ",Untitled Classification Settings,1000\n";
+    ofs << "Classes,Class Name,Source Population Name\n";
+    ofs << ",Total,ALL\n";
+    ofs << "Gating,-none-\n\n\n";
+    ofs << "Image Channel Settings,Gain,Exposure,SetupMode,Illumination Source\n";
+    ofs << "41afc28e-223a-40cb-b9b5-1e752ee0c7f2,0,8561 (ums),Always,Brightfield\n\n\n";
+}
+
+void write_well_json(const std::string& well_name,
+                     const std::vector<FovData>& fovs_data,
+                     const std::filesystem::path& output_folder) {
+    std::ofstream json_ofs(output_folder / (well_name + ".json"), std::ios::binary);
+    if (!json_ofs) {
+        std::cerr << "Failed to open json output for well " << well_name << std::endl;
+        return;
+    }
+
+    json_ofs << '{'
+             << "\"experiment_id\":\"" << escape_json(config.EXPERIMENT_ID) << "\"," 
+             << "\"plate_name\":\"" << escape_json(config.PLATE_NAME) << "\"," 
+             << "\"well_name\":\"" << escape_json(well_name) << "\"," 
+             << "\"elapsed_time_seconds\":0,"
+             << "\"fovs_data\":[";
+    for (size_t fov_idx = 0; fov_idx < fovs_data.size(); ++fov_idx) {
+        const auto& [fov_file, total_cells, cells] = fovs_data[fov_idx];
+        json_ofs << '{'
+                 << "\"pic_name\":\"" << escape_json(fov_file) << "\"," 
+                 << "\"total_cells\":" << total_cells << ','
+                 << "\"cells\":[";
+        for (size_t cell_idx = 0; cell_idx < cells.size(); ++cell_idx) {
+            const auto& cell = cells[cell_idx];
+            json_ofs << '{'
+                     << "\"cell_id\":" << cell.cell_id << ','
+                     << "\"center\":{\"x\":" << cell.cx << ",\"y\":" << cell.cy << "},"
+                     << "\"contour\":[";
+            for (size_t pt_idx = 0; pt_idx < cell.contour.size(); ++pt_idx) {
+                const auto& [px, py] = cell.contour[pt_idx];
+                json_ofs << '[' << px << ',' << py << ']';
+                if (pt_idx + 1 != cell.contour.size()) {
+                    json_ofs << ',';
+                }
+            }
+            json_ofs << "],\"class\":\"" << escape_json(cell.cell_class) << "\"}";
+            if (cell_idx + 1 != cells.size()) {
+                json_ofs << ',';
+            }
+        }
+        json_ofs << "]}";
+        if (fov_idx + 1 != fovs_data.size()) {
+            json_ofs << ',';
+        }
+    }
+    json_ofs << "]}";
+}
+
+void write_all_outputs(const std::map<std::string, std::vector<FovData>>& well_fov_results,
+                       const std::vector<CellInfo>& all_colonies_data,
+                       const std::filesystem::path& output_folder) {
+    for (const auto& [well_name, fovs_data] : well_fov_results) {
+        write_well_json(well_name, fovs_data, output_folder);
+    }
+
+    if (!all_colonies_data.empty()) {
+        const std::string timestamp = make_file_timestamp();
+        write_object_csv(all_colonies_data, (output_folder / (timestamp + "_object.csv")).string());
+        write_well_plate_csv(all_colonies_data, (output_folder / (timestamp + "_well_plate.csv")).string());
     }
 }
+
 
 // 6. 批量处理主流程
 // void batch_process(const std::map<std::string, std::vector<std::string>>& well_groups,

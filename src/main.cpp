@@ -47,7 +47,7 @@ int main(){
         for(auto &fp: fs::directory_iterator(config.IMAGE_FOLDER)){
             fs::path f = fp.path();
             if(f.extension() == ".jpg" && f.string().find("Xmm") != std::string::npos)
-                file_lists.push_back(f.string());
+                file_lists.push_back(f.filename().string());
         }
         // 按孔位分组FOV文件
         std::map<std::string, std::vector<std::string>> well_groups;
@@ -121,62 +121,104 @@ int main(){
         int win_size_px_orig = std::max(3, static_cast<int>(std::round(config.TEXTURE_WINDOW_UM / 1.0)));
         if (win_size_px_orig % 2 == 0) win_size_px_orig += 1;
         int radius = win_size_px_orig / 2;
+        int scale = static_cast<int>(config.PIXEL_SIZE_UM);
         NativeGpuProcessor gpu_proc;
+        const auto t_global = Clock::now();
 
-        for(const auto& [well_name, fovs]: well_groups){
-            well_names.push_back(well_name);
-            std::vector<std::future<std::pair<cv::Mat, cv::Mat>>> load_futures;
-            const auto t0 = Clock::now();
-            for(const auto& path: fovs){
-                const auto p = path; 
-                load_futures.emplace_back(
-                    load_pool.enqueue([p](){
-                        return load_img(p);
-                    })
-                );
+        // ===== 全局流水线: 所有 well 的 FOV 一次性提交到 load_pool =====
+        struct FovMeta { int well_idx, fov_idx; };
+        struct WellBucket {
+            std::string name;
+            std::vector<std::string> fov_paths;
+            std::vector<cv::Mat> imgs, texs;
+            int remaining;
+        };
+        std::vector<WellBucket> wells;
+        wells.reserve(well_groups.size());
+        std::vector<std::future<cv::Mat>> all_futures;
+        std::vector<FovMeta> all_meta;
+        all_futures.reserve(file_lists.size());
+        all_meta.reserve(file_lists.size());
+
+        for (const auto& [wn, fovs] : well_groups) {
+            int wi = (int)wells.size();
+            wells.push_back({wn, fovs,
+                std::vector<cv::Mat>(fovs.size()),
+                std::vector<cv::Mat>(fovs.size()),
+                (int)fovs.size()});
+            for (int fi = 0; fi < (int)fovs.size(); fi++) {
+                all_futures.push_back(
+                    load_pool.enqueue([p = fovs[fi]]() { return load_img(p); }));
+                all_meta.push_back({wi, fi});
             }
-            
-            std::vector<cv::Mat> imgs_small, texs_small;
-            int scale = static_cast<int>(config.PIXEL_SIZE_UM);
-
-            for(auto& fut: load_futures){
-                auto [img_raw, _unused] = fut.get();
-                if(img_raw.empty()) continue;
-
-                int sw = img_raw.cols;
-                int sh = img_raw.rows;
-                int dw = sw / scale;
-                int dh = sh / scale;
-
-                cv::Mat h_img_s(dh, dw, CV_8U);
-                cv::Mat h_tex_s(dh, dw, CV_8U);
-
-                // 使用原生 CUDA Kernel 处理
-                gpu_proc.process(img_raw.data, sw, sh, h_img_s.data, h_tex_s.data, dw, dh, radius, scale);
-
-                imgs_small.emplace_back(h_img_s);
-                texs_small.emplace_back(h_tex_s);
-            }
-            const auto t1 = Clock::now();
-            std::cout << "[Main] Loaded and Native GPU preprocessed for well " << well_name << " in " << std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count() << " ms\n";
-            future_results.push_back(
-                process_pool.enqueue([well_name, fovs, imgs = std::move(imgs_small), texs = std::move(texs_small)](std::pair<double, double> well_origin){
-                    try{
-                        std::cout << "[Thread] Start processing well: " << well_name << std::endl;
-                        auto result = process_well(well_name, fovs, well_origin, imgs, texs);
-                        std::cout << "[Thread] Done processing well: " << well_name << std::endl;
-                        return result;
-                    }catch(const std::exception& e){
-                        std::cerr << "Error processing well " << well_name << ": " << e.what() << std::endl;
-                        return std::make_pair(std::map<std::string, std::vector<CellJson>>(), std::vector<CellInfo>());
-                    }catch(...){
-                        std::cerr << "Unknown error in well " << well_name << std::endl;
-                        return std::make_pair(std::map<std::string, std::vector<CellJson>>(), std::vector<CellInfo>());
-                    }
-                }, well_origin_map[well_name])
-            );
-            
         }
+
+        // 当某 well 全部图像 GPU 处理完毕, 自动提交 process_well
+        auto submit_well = [&](WellBucket& wb) {
+            well_names.push_back(wb.name);
+            future_results.push_back(
+                process_pool.enqueue(
+                    [name = wb.name, fovs = std::move(wb.fov_paths),
+                     imgs = std::move(wb.imgs), texs = std::move(wb.texs)]
+                    (std::pair<double, double> origin) {
+                        try {
+                            std::cout << "[Thread] Start processing well: " << name << std::endl;
+                            auto result = process_well(name, fovs, origin, imgs, texs);
+                            std::cout << "[Thread] Done processing well: " << name << std::endl;
+                            return result;
+                        } catch (const std::exception& e) {
+                            std::cerr << "Error processing well " << name << ": " << e.what() << std::endl;
+                            return std::make_pair(std::map<std::string, std::vector<CellJson>>(), std::vector<CellInfo>());
+                        } catch (...) {
+                            std::cerr << "Unknown error in well " << name << std::endl;
+                            return std::make_pair(std::map<std::string, std::vector<CellJson>>(), std::vector<CellInfo>());
+                        }
+                    },
+                    well_origin_map[wb.name])
+            );
+        };
+
+        // GPU 结果收集 + 按 well 聚合
+        struct PendingGpu { int pipe_idx, dw, dh, well_idx, fov_idx; };
+        std::vector<PendingGpu> pending;
+        pending.reserve(all_futures.size());
+        size_t gpu_done = 0;
+
+        auto collect_gpu = [&]() {
+            auto& pg = pending[gpu_done++];
+            cv::Mat h_img(pg.dh, pg.dw, CV_8U);
+            cv::Mat h_tex(pg.dh, pg.dw, CV_8U);
+            gpu_proc.wait(pg.pipe_idx, h_img.data, h_tex.data, pg.dw, pg.dh);
+            auto& wb = wells[pg.well_idx];
+            wb.imgs[pg.fov_idx] = h_img;
+            wb.texs[pg.fov_idx] = h_tex;
+            if (--wb.remaining == 0) submit_well(wb);
+        };
+
+        // 主循环: 按顺序取加载结果 → 多流水线 GPU → 自动触发 well 后处理
+        for (size_t i = 0; i < all_futures.size(); i++) {
+            auto img_raw = all_futures[i].get();
+            auto [wi, fi] = all_meta[i];
+
+            if (img_raw.empty()) {
+                if (--wells[wi].remaining == 0) submit_well(wells[wi]);
+                continue;
+            }
+
+            int sw = img_raw.cols, sh = img_raw.rows;
+            int dw = sw / scale, dh = sh / scale;
+
+            if ((int)(pending.size() - gpu_done) >= NativeGpuProcessor::NUM_PIPES)
+                collect_gpu();
+
+            int pipe = gpu_proc.submit(img_raw.data, sw, sh, dw, dh, radius);
+            pending.push_back({pipe, dw, dh, wi, fi});
+        }
+        while (gpu_done < pending.size()) collect_gpu();
+
+        const auto t_global_end = Clock::now();
+        std::cout << "[Main] Global pipeline: " << file_lists.size() << " images in "
+                  << std::chrono::duration_cast<std::chrono::milliseconds>(t_global_end - t_global).count() << " ms\n";
         for(size_t i = 0; i < future_results.size(); ++i){
             auto [cell_json_map, cell_info_list] = future_results[i].get();
             std::string well_name = well_names[i];
@@ -196,8 +238,10 @@ int main(){
                 );
             }
         }
-        write_object_csv(all_colonies_data, config.OUTPUT_FOLDER.string() + "\\object.csv");
-        write_well_plate_csv(all_colonies_data, config.OUTPUT_FOLDER.string() + "\\well_plate.csv");
+        //write_all_outputs(well_fov_results, all_colonies_data, config.OUTPUT_FOLDER);
+        // write_well_plate_csv(all_colonies_data, config.OUTPUT_FOLDER.string() + "/well_plate_data.csv");
+        // write_object_csv(all_colonies_data, config.OUTPUT_FOLDER.string() + "/object_data.csv");
+        write_all_outputs(well_fov_results, all_colonies_data, config.OUTPUT_FOLDER);
         auto end = std::chrono::high_resolution_clock::now();
         std::cout << "Complete tasks in " << std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count() << " ms\n";
         return 0;
