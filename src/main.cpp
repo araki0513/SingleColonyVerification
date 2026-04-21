@@ -84,39 +84,7 @@ int main(){
         std::vector<std::string> well_names;
         future_results.reserve(well_groups.size());
         well_names.reserve(well_groups.size());
-        /*{   
-            ThreadPool pool(config.NUM_THREADS);
-            for(const auto& [well_name, fovs]: well_groups){
-                well_names.push_back(well_name);
-                auto fut= pool.enqueue([well_name, fovs, &well_fov_results, &all_colonies_data](std::pair<double, double> well_origin){
-                    try{
-                        std::cout << "[Thread] Start processing well: " << well_name << std::endl;
-                        auto result = process_well(well_name, fovs, well_origin);
-                        std::cout << "[Thread] Done processing well: " << well_name << std::endl;
-                        {
-                            std::lock_guard<std::mutex> lock(wirte_mtx);
-                            auto [cell_json_map, cell_info_list] = result;
-                            std::vector<FovData> fovs_data;
-                            for(const auto& [fov_file, cells]: cell_json_map){
-                                fovs_data.emplace_back(std::make_tuple(fov_file, cells.size(), cells));
-                            }
-                            well_fov_results[well_name] = fovs_data;
-                            all_colonies_data.insert(all_colonies_data.end(), cell_info_list.begin(), cell_info_list.end());
-                        }
-                        return result;
-                    }catch(const std::exception& e){
-                        std::cerr << "Error processing well " << well_name << ": " << e.what() << std::endl;
-                        return std::make_pair(std::map<std::string, std::vector<CellJson>>(), std::vector<CellInfo>());
-                    }catch(...){
-                        std::cerr << "Unknown error in well " << well_name << std::endl;
-                        return std::make_pair(std::map<std::string, std::vector<CellJson>>(), std::vector<CellInfo>());
-                    }
-                    
-                }, well_origin_map[well_name]);
-                //auto [cell_json_map, cell_info_list] = fut.get();
-                // 整理该孔位下所有 FOV 的 JSON 数据
-            }
-        }*/
+
         using Clock = std::chrono::steady_clock;
         int win_size_px_orig = std::max(3, static_cast<int>(std::round(config.TEXTURE_WINDOW_UM / 1.0)));
         if (win_size_px_orig % 2 == 0) win_size_px_orig += 1;
